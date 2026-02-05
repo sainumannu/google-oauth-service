@@ -133,8 +133,14 @@ class OAuthManager:
                     }
                 },
                 scopes=scopes,
-                redirect_uri=self.redirect_uri
+                redirect_uri=self.redirect_uri,
+                autogenerate_code_verifier=True
             )
+            
+            # Disable scope verification - Google may return additional scopes 
+            # from previously authorized services
+            import os
+            os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
             
             flow.fetch_token(code=code)
             credentials = flow.credentials
